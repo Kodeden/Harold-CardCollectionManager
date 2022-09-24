@@ -1,0 +1,37 @@
+.App {
+  text-align: center;
+  color: #181616;
+  background-color: #bfd8ef;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.tabcontainer {
+  align-self: flex-start;
+  flex-direction: row;
+  display: flex;
+  background-color: #bfd8ef;
+}
+
+.tab {
+  border: 1px solid black;
+  border-radius: 15px 15px 0 0;
+  border-bottom: none;
+  padding: 5px;
+  margin: 0 5px;
+}
+
+.list {
+  background-color: white;
+}
+
+.new {
+  background-color: white;
+}
+
+body {
+  background-color: #bfd8ef;
+}

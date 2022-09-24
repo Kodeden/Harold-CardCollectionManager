@@ -6,10 +6,15 @@ import {
 import express from "express";
 import http from "http";
 import db from "../models/index.js";
+import { graphqlUploadExpress } from "graphql-upload-minimal";
 
 async function startApolloServer(typeDefs, resolvers) {
   // Required logic for integrating with Express
   const app = express();
+  app.use (
+    "/graphql",
+    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 })
+  )
   // Our httpServer handles incoming requests to our Express app.
   // Below, we tell Apollo Server to "drain" this httpServer,
   // enabling our servers to shut down gracefully.

@@ -1,20 +1,19 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { Sequelize, DataTypes } from "sequelize";
-import Book from "./Book.js";
-import Author from "./Author.js";
+import Card from "./Card.js";
+import Set from "./Set.js";
 
 
 const db = {};
 
 const sequelize = new Sequelize(
-  process.env.POSTGRES_DB,
-  process.env.POSTGRES_USER,
-  process.env.POSTGRES_PASSWORD,
+  'sqlite-db',
+  'user',
+  'pass',
   {
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    dialect: "postgres",
+    host: './dev.sqlite',
+    dialect: "sqlite",
   }
 );
 
@@ -30,10 +29,10 @@ sequelize
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.Book = Book(sequelize, DataTypes);
-db.Author = Author(sequelize, DataTypes);
+db.Card = Card(sequelize, DataTypes);
+db.Set = Set(sequelize, DataTypes);
 
-db.Book.belongsTo(db.Author);
-db.Author.hasMany(db.Book);
+db.Card.belongsTo(db.Set);
+db.Set.hasMany(db.Card);
 
 export default db;

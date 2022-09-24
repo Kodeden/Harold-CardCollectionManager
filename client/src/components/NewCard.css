@@ -1,0 +1,13 @@
+body {
+    background-color: white;
+}
+
+main {
+    background-color: white;
+    border: 1px solid black;
+}
+
+.cardimage {
+    width: 10em;
+    height: 17em;
+}

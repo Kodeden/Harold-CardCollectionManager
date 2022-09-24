@@ -1,20 +1,21 @@
 export default (sequelize, DataTypes) => {
-    const Book = sequelize.define(
-      "book",
+    const Set = sequelize.define(
+      "set",
       {
         id: {
           type: DataTypes.UUID,
           defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
         },
-        title: {
+        setname: {
           type: DataTypes.STRING,
           allowNull: false,
           required: true,
-          unique: {
-            args: true,
-            message: "Book Title must be unique!",
-          },
+        },
+        setyear: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          required: true,
         },
       },
       {
@@ -22,5 +23,5 @@ export default (sequelize, DataTypes) => {
       }
     );
   
-    return Book;
+    return Set;
   };

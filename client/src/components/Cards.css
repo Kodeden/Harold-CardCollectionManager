@@ -1,0 +1,33 @@
+.inputs {
+    display: flex;
+    line-height: 15px;
+    font-size: 15px;
+    align-items: center;
+    padding: 5px;
+    background-color: white;
+}
+
+input {
+    margin: 5px;
+}
+
+body {
+    background-color: white;
+}
+
+main {
+    background-color: white;
+    border: 1px solid black;
+}
+
+li {
+    display: grid;
+    grid-template-columns: 8% 20% 8% 7% 10% 10% 5% 12% 10% 10%;
+    width: 95%;
+    min-width: 1000px;
+    align-items: stretch;
+}
+
+li div {
+    border: 1px solid black;
+}

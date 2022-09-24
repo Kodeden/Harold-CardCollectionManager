@@ -4,29 +4,47 @@ import { gql } from "apollo-server-express";
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
+
+  scalar Upload
+
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+  
+  type Card {
     id: ID
-    title: String
-    author: Author
+    cardnumber: String!
+    cardname: String!
+    price: Float
+    majorcard: Boolean
+    quantityowned: Int!
+    cardcondition: Int
+    grade: Float
+    grader: String
+    frontpic: File
+    backpic: File
+    set: Set
   }
-  type Author {
-    id: Int
-    name: String!
-    books: [Book]
+  type Set {
+    id: ID
+    setname: String!
+    setyear: String!
+    cards: [Card]
   }
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+
   type Query {
-    books: [Book]
-    booksByAuthor(author: String): [Book]
+    cards: [Card]
+    cardsBySet(set: String, year: String): [Card]
+    cardsByName(cardname: String): [Card]
   }
   type Mutation {
-    addBook(title: String, author: String): Book
-    deleteBook(title: String): [Book]
-    changeAuthor(title: String, author: String): Book
+    singleUpload(file: Upload!): File!
+    addCard(cardnumber: String, cardname: String, price: Float, setname: String, setyear: String, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String, frontpic: Upload, backpic: Upload): Card
+    deleteCard(id: String): String
+    changeQuantity(id: String, quantityowned: String): Card
+    changeCardCondition(id: String, cardcondition: String): Card
   }
 `;
 

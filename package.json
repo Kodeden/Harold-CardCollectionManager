@@ -1,10 +1,12 @@
 {
-  "name": "apolloserver",
+  "name": "Card Collection Manager",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js",
+    "client": "npm run dev --prefix client ",
+    "dev": "concurrently \"npm start\" \"npm run client\""
   },
   "type": "module",
   "author": "",
@@ -12,13 +14,17 @@
   "dependencies": {
     "apollo-server-core": "^3.10.2",
     "apollo-server-express": "^3.10.2",
+    "concurrently": "^7.4.0",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
     "graphql": "^16.6.0",
+    "graphql-upload-minimal": "^1.5.3",
     "nodemon": "^2.0.19",
     "pg": "^8.8.0",
     "sequelize": "^6.21.4",
-    "url": "^0.11.0"
+    "sqlite3": "^5.1.0",
+    "url": "^0.11.0",
+    "use-file-picker": "^1.5.1"
   }
 }

@@ -1,11 +1,14 @@
 import { isConstValueNode } from "graphql";
+import { Sequelize } from "sequelize";
+import { GraphQLUpload } from "graphql-upload-minimal";
+import fs from "fs";
 
 const resolvers = {
     Query: {
-      books: async (parent, args, { db }) => {
+      cards: async (parent, args, { db }) => {
         try {
-          const results = await db.Book.findAll({
-            include: { model: db.Author, required: true },
+          const results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
           });
   
           return results;
@@ -14,91 +17,142 @@ const resolvers = {
           throw Error(err);
         }
       },
-      booksByAuthor: async (parent, { author }, { db }) => {
+      cardsBySet: async (parent, { set, year }, { db }) => {
         try {
-          const results = await db.Author.findAll({
-            where: { name: author },
-            include: { model: db.Book, required: true },
+          const results = await db.Set.findAll({
+            where: { setname: set, setyear: year },
           });
-
           if (results.length) {
-            return results[0].dataValues?.books;
+            const setId = results[0].dataValues?.id
+
+            const cardresults = await db.Card.findAll({
+              where: { setId: setId },
+              include: { model: db.Set, required: true },
+            });
+            if (cardresults.length) {
+              return cardresults
+            }
           }
-  
-          throw Error("Failed to get books by author");
+          throw Error("Failed to get cards by set");
         } catch (err) {
           console.log(err);
   
           throw Error(err);
         }
       },
-    },
-    Mutation: {
-      addBook: async (parent, { title, author }, { db }) => {
-        let newAuthor = {};
-        let book = { title };
-  
+      cardsByName: async (parent, { cardname }, { db }) => {
+        cardname = "%"+cardname+"%"
         try {
-          const results = await db.Author.findOrCreate({
-            where: { name: author },
-            defaults: { name: author },
+          const results = await db.Card.findAll({
+            where: { cardname: {[Sequelize.Op.like]: cardname} },
+            include: { model: db.Set, required: true },
+          });
+  
+          return results;
+        } catch (err) {
+          console.log(err);
+          throw Error(err);
+        }
+      },
+
+    },
+    Upload: GraphQLUpload,
+    Mutation: {
+      singleUpload: async (parent, { file }) => {
+        const { createReadStream, filename, mimetype, encoding } = await file;
+  
+        // Invoking the `createReadStream` will return a Readable Stream.
+        // See https://nodejs.org/api/stream.html#stream_readable_streams
+        const stream = createReadStream();
+  
+        // This is purely for demonstration purposes and will overwrite the
+        // local-file-output.txt in the current working directory on EACH upload.
+        const out = fs.createWriteStream('local-file-output.txt');
+        stream.pipe(out);
+        await finished(out);
+  
+        return { filename, mimetype, encoding };
+      },
+      addCard: async (parent, { cardnumber, cardname, price, setname, setyear, majorcard, quantityowned, cardcondition, grade, grader, frontpic, backpic }, { db }) => {
+        let newSet = {};
+        let card = { cardnumber, cardname, price, majorcard, quantityowned, cardcondition, grade, grader, frontpic, backpic };  
+        try {
+          const results = await db.Set.findOrCreate({
+            where: { setname: setname, setyear: setyear },
+            defaults: { setname: setname,  setyear: setyear},
           });
           if (results.length) {
-            newAuthor = { ...results[0].dataValues };
-            book = { ...book, authorId: newAuthor.id };
+            newSet = { ...results[0].dataValues };
+            card = { ...card, setId: newSet.id };
   
-            const bookResults = await db.Book.findOrCreate({
-              where: { title: book.title },
-              defaults: { ...book },
-              include: { model: db.Author, required: true },
+            const cardResults = await db.Card.findOrCreate({
+              where: { cardnumber: cardnumber, cardname: cardname, setId: newSet.id },
+              defaults: { ...card },
+              include: { model: db.Set, required: true },
             });
   
-            if (bookResults.length) {
-              return bookResults[0].dataValues;
+            if (cardResults.length) {
+              return cardResults[0].dataValues;
             }
           }
   
-          throw Error("There was something wrong while creating a book");
+          throw Error("There was something wrong while creating a card");
         } catch (err) {
           console.log(err);
-          throw Error("There was something wrong while creating a book");
+          throw Error("There was something wrong while creating a card");
         }
       },
-      deleteBook: async (parent, { title }, { db }) => {
+
+      deleteCard: async (parent, { id }, { db }) => {
         try {
-          const results = await db.Book.destroy({
+          const results = await db.Card.destroy({
             returning: true,
-            where: { title: title },
+            where: { id: id },
           });
           console.log(results)
-          return {id: 1, title: 'Book Deleted', authorID: 1};
+          return 'Card Deleted';
             }
         catch (err) {
           console.log(err);
-          throw Error("There was something wrong while deleting a book");
+          throw Error("There was something wrong while deleting a card");
         }
       },
-      changeAuthor: async (parent, { title, author }, { db }) => {
-        let newAuthor = {};
-  
+      changeQuantity: async (parent, { id, quantityowned }, { db }) => {
         try {
-          const results = await db.Author.findOrCreate({
-            where: { name: author },
-            defaults: { name: author },
+          let results = await db.Card.update(
+            { quantityowned: quantityowned },
+            {returning: true, 
+              where: { id: id }, 
+              }
+          );
+          results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
+            where: { id: id }
           });
-          if (results.length) {
-            newAuthor = { ...results[0].dataValues }; 
-            const bookResults = await db.Book.update(
-              { authorId: newAuthor.id },
-              {returning: true, 
-                where: { title: title }, 
-                include: { model: db.Author, required: true }}
-            );
-            return bookResults[1][0].dataValues;
-          };
+          console.log(results);
+          return results[0].dataValues;
         } catch (err) {
           console.log(err);
-          throw Error("There was something wrong while updating a book");
+          throw Error("There was something wrong while updating a card");
+        }
+      },
+      changeCardCondition: async (parent, { id, cardcondition }, { db }) => {
+        try {
+          let results = await db.Card.update(
+            { cardcondition: cardcondition },
+            {returning: true, 
+              where: { id: id }, 
+              }
+          );
+          results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
+            where: { id: id }
+          });
+          console.log(results);
+          return results[0].dataValues;
+        } catch (err) {
+          console.log(err);
+          throw Error("There was something wrong while updating a card");
         }
       },
     },
