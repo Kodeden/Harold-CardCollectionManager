@@ -12,8 +12,7 @@ async function startApolloServer(typeDefs, resolvers) {
   // Required logic for integrating with Express
   const app = express();
   app.use (
-    "/graphql",
-    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 })
+    graphqlUploadExpress()
   )
   // Our httpServer handles incoming requests to our Express app.
   // Below, we tell Apollo Server to "drain" this httpServer,

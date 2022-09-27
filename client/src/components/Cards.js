@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Cards.css";
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql, useQuery } from '@apollo/client';
 import Card from "./Card.js"
 
 
@@ -25,6 +25,8 @@ export default function Cards() {
     //             majorcard
     //             quantityowned
     //             cardcondition
+    //             grade
+    //             grader
     //             set {
     //                 setname
     //                 setyear
@@ -67,6 +69,8 @@ export default function Cards() {
                                     setname
                                     setyear
                                 }
+                                frontpic
+                                backpic
                                 }
                             }
                           `, 
@@ -111,6 +115,8 @@ export default function Cards() {
                                     setname
                                     setyear
                                 }
+                                frontpic
+                                backpic
                                 }
                             }
                           `, 
@@ -123,27 +129,33 @@ export default function Cards() {
                     onClick={(e) => (
                         client.query({
                           query: gql`
-                          query Cards {
-                            cards {
-                              id
-                              cardnumber
-                              cardname
-                              price
-                              majorcard
-                              quantityowned
-                              cardcondition
-                              grade
-                              grader
-                              set {
-                                setname
-                                setyear
-                              }
+                            query  Query {
+                                cards {
+                                    id
+                                    cardnumber
+                                    cardname
+                                    price
+                                    majorcard
+                                    quantityowned
+                                    cardcondition
+                                    grade
+                                    grader
+                                    set {
+                                        setname
+                                        setyear
+                                      }
+                                }
+
                             }
-                          }
                           `,
                           fetchPolicy : "network-only"
                         }).then((result) => setCardlist(result.data.cards)))}
                 >All Cards</button>
+                                {/* <button 
+                    type="text"
+                    name="text"
+                    onClick={(e) => (setCardlist(data.cards))}
+                >All Cards 2</button> */}
             </div>
             <div>
                 <ul className="list">

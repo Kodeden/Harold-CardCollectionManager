@@ -1,16 +1,62 @@
 import React, { useState } from "react";
 import "./NewCard.css";
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 
 
 export default function NewCard() {
 
     const client = new ApolloClient({
-        uri: 'http://localhost:4000',
+        link: createUploadLink({
+            uri: 'http://localhost:4000',
+        }),
         cache: new InMemoryCache(),
       });
 
+
+    const ADD_CARD = gql`
+    mutation Mutation(
+        $cardnumber: String, 
+        $cardname: String,
+        $price: Float, 
+        $setname: String, 
+        $setyear: String, 
+        $majorcard: Boolean, 
+        $quantityowned: Int, 
+        $cardcondition: Int, 
+        $grade: Float,
+        $grader: String) {
+      addCard(
+            cardnumber: $cardnumber, 
+            cardname: $cardname, 
+            price: $price, 
+            setname: $setname, 
+            setyear: $setyear, 
+            majorcard: $majorcard, 
+            quantityowned: $quantityowned, 
+            cardcondition: $cardcondition, 
+            grade: $grade, 
+            grader: $grader) {
+        id
+      }
+    }
+    `;
+    const ADD_FILE = gql`
+    mutation singleUpload($file: Upload!) {
+      singleUpload(file: $file) {
+        url
+      }
+    }
+    `;
+    const [uploadFile] = useMutation(ADD_FILE, {
+        onCompleted: data => console.log(data)
+    });
+    const [addCard] = useMutation(ADD_CARD, {
+        onCompleted: data => console.log(data)
+    });
+
+
+//dsfg
 
     const [cardName, setCardName] = useState("");
     const [setName, setSetName] = useState("");
@@ -153,16 +199,8 @@ export default function NewCard() {
             <button 
                     type="text"
                     name="text"
-                    onClick={(e) => {
-                        (client.mutate({
-                          mutation: gql`
-                          mutation Mutation($cardnumber: String, $cardname: String, $price: Float, $setname: String, $setyear: String, $majorcard: Boolean, $quantityowned: Int, $cardcondition: Int, $grade: Float, $grader: String) {
-                            addCard(cardnumber: $cardnumber, cardname: $cardname, price: $price, setname: $setname, setyear: $setyear, majorcard: $majorcard, quantityowned: $quantityowned, cardcondition: $cardcondition, grade: $grade, grader: $grader) {
-                              id
-                            }
-                          }
-                          `, 
-                          variables: {
+                    onClick={(e) => addCard({
+                        variables: {
                             cardnumber: cardNumber, 
                             cardname: cardName, 
                             price: Number(price), 
@@ -173,27 +211,15 @@ export default function NewCard() {
                             cardcondition: Number(condition),
                             grade: Number(grade), 
                             grader: grader},
-                          fetchPolicy : "network-only"
-                        }, ))}}
+                          fetchPolicy : "network-only"})}
             >Add Card</button>
             <button 
                     type="text"
                     name="text"
-                    onClick={async (e) => {
-                        (client.mutate({
-                          mutation: gql`
-                          mutation singleUpload($file: Upload!) {
-                            singleUpload(file: $file) {
-                              filename
-                              mimetype
-                              encoding
-                            }
-                          }
-                          `, 
-                          variables: {
-                            file: (frontpic)},
-                          fetchPolicy : "network-only"
-                        }, ))}}
+                    onClick={(e) => uploadFile({
+                        variables: {
+                            file: frontpic},
+                          fetchPolicy : "network-only"})}
             >test</button>
             <button 
                     type="text"

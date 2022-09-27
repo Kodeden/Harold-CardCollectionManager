@@ -2,6 +2,7 @@ import { isConstValueNode } from "graphql";
 import { Sequelize } from "sequelize";
 import { GraphQLUpload } from "graphql-upload-minimal";
 import fs from "fs";
+import path from "path";
 
 const resolvers = {
     Query: {
@@ -61,17 +62,20 @@ const resolvers = {
       singleUpload: async (parent, { file }) => {
         const { createReadStream, filename, mimetype, encoding } = await file;
   
-        // Invoking the `createReadStream` will return a Readable Stream.
-        // See https://nodejs.org/api/stream.html#stream_readable_streams
+        // // Invoking the `createReadStream` will return a Readable Stream.
+        // // See https://nodejs.org/api/stream.html#stream_readable_streams
         const stream = createReadStream();
   
-        // This is purely for demonstration purposes and will overwrite the
-        // local-file-output.txt in the current working directory on EACH upload.
-        const out = fs.createWriteStream('local-file-output.txt');
-        stream.pipe(out);
-        await finished(out);
+        // // This is purely for demonstration purposes and will overwrite the
+        // // local-file-output.txt in the current working directory on EACH upload.
+        // const out = fs.createWriteStream('local-file-output.txt');
+        // stream.pipe(out);
+        // await finished(out);
   
-        return { filename, mimetype, encoding };
+        // return { filename, mimetype, encoding };
+        const pathName = path.join(__dirname, `/public/images/${filename}`);
+        await stream.pipe(fs.createWriteStream(pathName));
+        return {url: `http://localhost:4000/images/${filename}`}
       },
       addCard: async (parent, { cardnumber, cardname, price, setname, setyear, majorcard, quantityowned, cardcondition, grade, grader, frontpic, backpic }, { db }) => {
         let newSet = {};
