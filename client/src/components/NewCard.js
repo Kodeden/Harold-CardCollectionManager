@@ -56,7 +56,6 @@ export default function NewCard() {
     });
 
 
-//dsfg
 
     const [cardName, setCardName] = useState("");
     const [setName, setSetName] = useState("");

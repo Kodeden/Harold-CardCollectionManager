@@ -41,6 +41,9 @@ const typeDefs = gql`
     singleUpload(file: Upload!): File!
     addCard(cardnumber: String, cardname: String, price: Float, setname: String, setyear: String, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String, frontpic: Upload, backpic: Upload): Card
     deleteCard(id: String): String
+    updateCard(id: String, price: Float, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String): Card
+    changePrice(id: String, price: Float): Card
+    changeMajor(id: String, majorcard: Boolean): Card
     changeQuantity(id: String, quantityowned: String): Card
     changeCardCondition(id: String, cardcondition: String): Card
   }

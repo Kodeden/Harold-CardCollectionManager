@@ -10,6 +10,7 @@ const client = new ApolloClient({
 });
 
 export default function Cards() {
+   
     const [cardName, setCardName] = useState("");
     const [setName, setSetName] = useState("");
     const [year, setYear] = useState("");
@@ -69,8 +70,6 @@ export default function Cards() {
                                     setname
                                     setyear
                                 }
-                                frontpic
-                                backpic
                                 }
                             }
                           `, 

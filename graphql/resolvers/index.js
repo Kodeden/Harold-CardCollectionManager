@@ -121,6 +121,70 @@ const resolvers = {
           throw Error("There was something wrong while deleting a card");
         }
       },
+      updateCard: async (parent, { id, price, majorcard, quantityowned, cardcondition, grade, grader }, { db }) => {
+        try {
+          let results = await db.Card.update(
+            {
+              price: price,
+              majorcard: majorcard,
+              quantityowned: quantityowned,
+              cardcondition: cardcondition,
+              grade: grade,
+              grader: grader
+            },
+            {returning: true, 
+              where: { id: id }, 
+              }
+          );
+          results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
+            where: { id: id }
+          });
+          console.log(results);
+          return results[0].dataValues;
+        } catch (err) {
+          console.log(err);
+          throw Error("There was something wrong while updating a card");
+        }
+      },
+      changePrice: async (parent, { id, price }, { db }) => {
+        try {
+          let results = await db.Card.update(
+            { price: price },
+            {returning: true, 
+              where: { id: id }, 
+              }
+          );
+          results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
+            where: { id: id }
+          });
+          console.log(results);
+          return results[0].dataValues;
+        } catch (err) {
+          console.log(err);
+          throw Error("There was something wrong while updating a card");
+        }
+      },
+      changeMajor: async (parent, { id, majorcard }, { db }) => {
+        try {
+          let results = await db.Card.update(
+            { majorcard: majorcard },
+            {returning: true, 
+              where: { id: id }, 
+              }
+          );
+          results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
+            where: { id: id }
+          });
+          console.log(results);
+          return results[0].dataValues;
+        } catch (err) {
+          console.log(err);
+          throw Error("There was something wrong while updating a card");
+        }
+      },
       changeQuantity: async (parent, { id, quantityowned }, { db }) => {
         try {
           let results = await db.Card.update(
