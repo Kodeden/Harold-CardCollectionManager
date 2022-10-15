@@ -11,10 +11,6 @@ input {
     margin: 5px;
 }
 
-body {
-    background-color: white;
-}
-
 main {
     background-color: white;
     border: 1px solid black;
@@ -22,12 +18,41 @@ main {
 
 li {
     display: grid;
-    grid-template-columns: 8% 20% 8% 7% 10% 10% 5% 12% 10% 10%;
-    width: 95%;
-    min-width: 1000px;
+    grid-template-columns: 3.5% 5% 20% 6% 6% 7% 8% 5% 8% 10% 8% 8% 5.5%;
+    width: 98%;
+    min-width: 1200px;
     align-items: stretch;
 }
 
 li div {
     border: 1px solid black;
 }
+
+.listheader {
+    margin: 10px 0 0 0;
+    overflow-y: scroll;
+}
+
+.listheader::-webkit-scrollbar {
+    width: 17px;
+}
+
+.listheader::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+
+.cardlist {
+    margin: 0;
+    overflow-y: scroll;
+    height: calc(100vh - 225px);
+    min-height: 100px;
+}
+
+ul {
+    overflow-x: hidden;
+}
+
+.MuiCollapse-root {
+    grid-column: 1 / 15;
+}
+

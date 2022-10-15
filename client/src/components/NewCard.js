@@ -6,13 +6,13 @@ import { createUploadLink } from 'apollo-upload-client';
 
 export default function NewCard() {
 
-    const client = new ApolloClient({
-        link: createUploadLink({
-            uri: 'http://localhost:4000',
-        }),
-        cache: new InMemoryCache(),
-      });
-
+    // const client = new ApolloClient({
+    //     link: createUploadLink({
+    //         uri: 'http://localhost:4000',
+    //     }),
+    //     cache: new InMemoryCache(),
+    //   });
+    const [message, setMessage] = useState("");
 
     const ADD_CARD = gql`
     mutation Mutation(
@@ -37,7 +37,7 @@ export default function NewCard() {
             cardcondition: $cardcondition, 
             grade: $grade, 
             grader: $grader) {
-        id
+        cardname
       }
     }
     `;
@@ -52,7 +52,7 @@ export default function NewCard() {
         onCompleted: data => console.log(data)
     });
     const [addCard] = useMutation(ADD_CARD, {
-        onCompleted: data => console.log(data)
+        onCompleted: data => setMessage(data.addCard.cardname + " added")
     });
 
 
@@ -137,8 +137,8 @@ export default function NewCard() {
                 <input
                     type="checkbox"
                     name="text"
-                    onChange={(e) => setMajorCard(e.target.value)}
-                    value={majorCard}
+                    onChange={(e) => setMajorCard(e.target.checked)}
+                    checked={majorCard}
                 ></input>
             </div>
             <div>Number Owned:
@@ -212,7 +212,7 @@ export default function NewCard() {
                             grader: grader},
                           fetchPolicy : "network-only"})}
             >Add Card</button>
-            <button 
+            {/*<button 
                     type="text"
                     name="text"
                     onClick={(e) => uploadFile({
@@ -224,7 +224,8 @@ export default function NewCard() {
                     type="text"
                     name="text"
                     onClick={(e) => {console.log((frontpic))}}
-            >test2</button>
+                        >test2</button>*/}
+                        <div>{message ? message : null}</div>
         </main>
     );
   }

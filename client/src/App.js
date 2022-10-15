@@ -1,3 +1,4 @@
+import React from "react";
 import './App.css';
 import { Routes, Link, Route } from "react-router-dom";
 import Cards from './components/Cards.js';

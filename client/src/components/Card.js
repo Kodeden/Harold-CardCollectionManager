@@ -1,8 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./Card.css";
 import { gql, useMutation } from '@apollo/client';
+import { AiFillDelete, AiFillEdit, AiFillFileImage } from "react-icons/ai";
+import Collapse from '@mui/material/Collapse';
 
-function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardcondition, grade, grader, set }) {
+function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardcondition, grade, grader, set, deleteCard }) {
   const [newPrice, setNewPrice] = useState(price);
   const [newMajor, setNewMajor] = useState(majorcard);
   const [newQuantity, setNewQuantity] = useState(quantityowned);
@@ -10,6 +12,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
   const [newGrade, setNewGrade] = useState(grade);
   const [newGrader, setNewGrader] = useState(grader);
   const [edit, setEdit] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const toggleEditMode = () => {
     setEdit(!edit);
@@ -25,6 +28,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
   const [updateCard] = useMutation(UPDATE_CARD, {
       onCompleted: data => console.log(data)
   });
+
   const handleEdit = (id, price, majorcard, quantityowned, cardcondition, grade, grader) => {
     updateCard({
       variables: {
@@ -47,89 +51,129 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
 
   return (
     <li id={id}>
-          <div>{cardnumber}</div>
-          <div>{cardname}</div>
-          <div>
-            {edit ? (
-              <input
-                type="number"
-                onChange={(e) => setNewPrice(e.target.value)}
-                onKeyPress={handleKeyPress}
-                value={newPrice}
-              ></input>
-              ) : (
-              <span onDoubleClick={toggleEditMode} id={id}>
-                ${newPrice}
-              </span>)
-            }
-          </div>
-          <div>{edit ? (
-              <input
-                type="checkbox"
-                onChange={(e) => setNewMajor(e.target.checked)}
-                onKeyPress={handleKeyPress}
-                checked={newMajor}
-              ></input>
-              ) : (
-              <span onDoubleClick={toggleEditMode} id={id}>
-                {newMajor ? "Yes" : "No"}
-              </span>)
-            }</div>
-          <div>
-            {edit ? (
-              <input
-                type="number"
-                onChange={(e) => setNewQuantity(e.target.value)}
-                onKeyPress={handleKeyPress}
-                value={newQuantity}
-              ></input>
-              ) : (
-              <span onDoubleClick={toggleEditMode} id={id}>
-                {newQuantity}
-              </span>)
-            }</div>
-          <div>
-            {edit ? (
-              <input
-                type="number"
-                onChange={(e) => setNewCondition(e.target.value)}
-                onKeyPress={handleKeyPress}
-                value={newCondition}
-              ></input>
-              ) : (
-              <span onDoubleClick={toggleEditMode} id={id}>
-                {newCondition}
-              </span>)
-            }</div>
-          <div>
-            {edit ? (
-              <input
-                type="number"
-                onChange={(e) => setNewGrade(e.target.value)}
-                onKeyPress={handleKeyPress}
-                value={newGrade}
-              ></input>
-              ) : (
-              <span onDoubleClick={toggleEditMode} id={id}>
-                {newGrade}
-              </span>)
-            }</div>
-          <div>
-            {edit ? (
-              <input
-                type="text"
-                onChange={(e) => setNewGrader(e.target.value)}
-                onKeyPress={handleKeyPress}
-                value={newGrader}
-              ></input>
-              ) : (
-              <span onDoubleClick={toggleEditMode} id={id}>
-                {newGrader}
-              </span>)
-            }</div>
-          <div>{set.setname}</div>
-          <div>{set.setyear}</div>
-
+      {edit ? (
+          <button
+            onClick={() => {
+              handleEdit(id, newPrice, newMajor, newQuantity, newCondition, newGrade, newGrader)
+              setEdit(false)}}
+            >
+            <AiFillEdit />
+          </button>
+          ) : (
+          <button
+            onClick={() => {setEdit(true)}}
+            >
+            <AiFillEdit />
+          </button>)
+        }
+      <div>{cardnumber}</div>
+      <div>{cardname}</div>
+      <div>
+        {edit ? (
+          <input
+            type="number"
+            onChange={(e) => setNewPrice(e.target.value)}
+            onKeyPress={handleKeyPress}
+            value={newPrice}
+          ></input>
+          ) : (
+          <span onDoubleClick={toggleEditMode} id={id}>
+            ${newPrice}
+          </span>)
+        }
+      </div>
+      <div>{edit ? (
+          <input
+            type="checkbox"
+            onChange={(e) => setNewMajor(e.target.checked)}
+            onKeyPress={handleKeyPress}
+            checked={newMajor}
+          ></input>
+          ) : (
+          <span onDoubleClick={toggleEditMode} id={id}>
+            {newMajor ? "Yes" : "No"}
+          </span>)
+        }</div>
+      <div>
+        {edit ? (
+          <input
+            type="number"
+            onChange={(e) => setNewQuantity(e.target.value)}
+            onKeyPress={handleKeyPress}
+            value={newQuantity}
+          ></input>
+          ) : (
+          <span onDoubleClick={toggleEditMode} id={id}>
+            {newQuantity}
+          </span>)
+        }</div>
+      <div>
+        {edit ? (
+          <input
+            type="number"
+            onChange={(e) => setNewCondition(e.target.value)}
+            onKeyPress={handleKeyPress}
+            value={newCondition}
+          ></input>
+          ) : (
+          <span onDoubleClick={toggleEditMode} id={id}>
+            {newCondition}
+          </span>)
+        }</div>
+      <div>
+        {edit ? (
+          <input
+            type="number"
+            onChange={(e) => setNewGrade(e.target.value)}
+            onKeyPress={handleKeyPress}
+            value={newGrade}
+          ></input>
+          ) : (
+          <span onDoubleClick={toggleEditMode} id={id}>
+            {newGrade}
+          </span>)
+        }</div>
+      <div>
+        {edit ? (
+          <input
+            type="text"
+            onChange={(e) => setNewGrader(e.target.value)}
+            onKeyPress={handleKeyPress}
+            value={newGrader}
+          ></input>
+          ) : (
+          <span onDoubleClick={toggleEditMode} id={id}>
+            {newGrader}
+          </span>)
+        }</div>
+      <div>{set.setname}</div>
+      <div>{set.setyear}</div>
+      <button
+        onClick={() => {}}
+        >
+        <AiFillFileImage />
+      </button>
+      <button
+        onClick={() => {setOpen(!open)}}
+        >
+        <AiFillDelete />
+      </button>
+      <Collapse in={open}>
+        Really delete #{cardnumber} - {cardname}? 
+        <button
+          onClick={() => {
+            setOpen(false);
+            deleteCard(id);
+          }}
+          >
+          Yes
+        </button>
+        <button
+          onClick={() => {setOpen(false)}}
+          >
+          No
+        </button>
+      </Collapse>
     </li>
   );
 }

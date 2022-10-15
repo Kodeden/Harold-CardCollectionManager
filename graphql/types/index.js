@@ -35,7 +35,9 @@ const typeDefs = gql`
   type Query {
     cards: [Card]
     cardsBySet(set: String, year: String): [Card]
-    cardsByName(cardname: String): [Card]
+    cardsByName(cardname: String, sortBy: String, ascdesc: String): [Card]
+    cardsBySetAndName(cardname: String, set: String, year: String, sortBy: String, ascdesc: String): [Card]
+
   }
   type Mutation {
     singleUpload(file: Upload!): File!

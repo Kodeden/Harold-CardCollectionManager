@@ -1,43 +1,72 @@
 import React, { useState } from "react";
 import "./Cards.css";
-import { ApolloClient, InMemoryCache, gql, useQuery } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql, useMutation, useLazyQuery } from '@apollo/client';
 import Card from "./Card.js"
 
 
-const client = new ApolloClient({
-  uri: 'http://localhost:4000',
-  cache: new InMemoryCache(),
-});
+// const client = new ApolloClient({
+//   uri: 'http://localhost:4000',
+//   cache: new InMemoryCache(),
+// });
 
 export default function Cards() {
    
     const [cardName, setCardName] = useState("");
     const [setName, setSetName] = useState("");
     const [year, setYear] = useState("");
-    const [cardlist, setCardlist] = useState([]);
+    const [sortBy, setSortBy] = useState("cardnumber");
+    const [ascdesc, setAscdesc] = useState("Asc");
+    //const [cardlist, setCardlist] = useState([]);
 
-    // const ALL_CARDS = gql`
-    //     query  Query {
-    //         cards {
-    //             id
-    //             cardnumber
-    //             cardname
-    //             price
-    //             majorcard
-    //             quantityowned
-    //             cardcondition
-    //             grade
-    //             grader
-    //             set {
-    //                 setname
-    //                 setyear
-    //             }
-    //         }
 
-    //     }
-    // `;
+    const CARDS = gql`
+        query Query($cardname: String, $set: String, $year: String, $sortBy: String, $ascdesc: String) {
+            cardsBySetAndName(cardname: $cardname, set: $set, year: $year, sortBy: $sortBy, ascdesc: $ascdesc) {
+                id
+                cardnumber
+                cardname
+                price
+                majorcard
+                quantityowned
+                cardcondition
+                grade
+                grader
+                set {
+                setname
+                setyear
+                }
+            }
+        }
+     `;
     
-    // const { data, loading, error } = useQuery(ALL_CARDS);
+    const [getCards, { data, loading, error }] = useLazyQuery(CARDS);
+
+    const DELETE_CARD = gql`
+    mutation Mutation($id: String) {
+        deleteCard(id: $id)
+    }
+    `;
+    const [deleteCard] = useMutation(DELETE_CARD, {
+        onCompleted: data => console.log(data)
+    });
+    
+    const handleDelete = (id) => {
+      deleteCard({
+        variables: {
+            id: id},
+        fetchPolicy : "network-only"});
+      getCards({ 
+        variables: { 
+            cardname: cardName,
+            set: setName,
+            year: year,
+            sortBy: sortBy,
+            ascdesc: ascdesc
+        },
+        fetchPolicy : "network-only"
+      });
+    };
+    
 
     return (
         <main>
@@ -49,7 +78,7 @@ export default function Cards() {
                     onChange={(e) => setCardName(e.target.value)}
                     value={cardName}
                 ></input>
-                <button 
+                {/*<button 
                     type="text"
                     name="text"
                     onClick={(e) => (
@@ -75,7 +104,7 @@ export default function Cards() {
                           `, 
                           variables: {cardname: cardName}
                         }, ).then((result) => setCardlist(result.data.cardsByName)))}
-                >Search by Name</button>
+                    >Search by Name</button>*/}
                 </div>
                 <div>Set Name:
                 <input
@@ -93,7 +122,28 @@ export default function Cards() {
                     value={year}
                 ></input>
                 </div>
-                <button 
+                <div>Sort by:
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                >
+                    <option value="cardnumber">Card #</option>
+                    <option value="cardname">Card Name</option>
+                    <option value="majorcard">Major Card</option>
+                    <option value="quantityowned">Number Owned</option>
+                    <option value="cardcondition">Card Condition</option>
+                    <option value="grade">Grade</option>
+                    <option value="grader">Grader</option>
+                </select>
+                <select
+                    value={ascdesc}
+                    onChange={(e) => setAscdesc(e.target.value)}
+                >
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+                </div>
+                {/*<button 
                     type="text"
                     name="text"
                     onClick={(e) => (
@@ -114,8 +164,6 @@ export default function Cards() {
                                     setname
                                     setyear
                                 }
-                                frontpic
-                                backpic
                                 }
                             }
                           `, 
@@ -150,34 +198,54 @@ export default function Cards() {
                           fetchPolicy : "network-only"
                         }).then((result) => setCardlist(result.data.cards)))}
                 >All Cards</button>
-                                {/* <button 
+                                <button 
                     type="text"
                     name="text"
-                    onClick={(e) => (setCardlist(data.cards))}
-                >All Cards 2</button> */}
+                    onClick={(e) => (setSearch(true))}
+                    >All Cards 2</button>*/}
+                    <button 
+                    type="text"
+                    name="text"
+                    onClick={(e) => (getCards({ 
+                        variables: { 
+                            cardname: cardName,
+                            set: setName,
+                            year: year,
+                            sortBy: sortBy,
+                            ascdesc: ascdesc
+                        },
+                        fetchPolicy : "network-only"
+                    }))}
+                    >Search</button>
             </div>
             <div>
-                <ul className="list">
+                <ul className="listheader">
                     <li>
-                        <div>Card Number</div>
+                        <div>Edit</div>
+                        <div>Card #</div>
                         <div>Card Name</div>
                         <div>Price</div>
-                        <div>Major Card</div>
-                        <div>Number Owned</div>
+                        <div>Major</div>
+                        <div>Owned</div>
                         <div>Condition</div>
                         <div>Grade</div>
                         <div>Grader</div>
                         <div>Set Name</div>
                         <div>Set Year</div>
+                        <div>Images</div>
+                        <div>Delete</div>
                     </li>
-                    {cardlist.map((card) => {
+                </ul>
+                <ul className="cardlist">    
+                    {(!loading && !error && (data != undefined)) ? (data.cardsBySetAndName.map((card) => {
                     return (
                         <Card
                             key={card.id}
                             {...card}
+                            deleteCard={handleDelete}
                         />
                     );
-                    })}
+                    })) : null }
                 </ul>
             </div>
         </main>

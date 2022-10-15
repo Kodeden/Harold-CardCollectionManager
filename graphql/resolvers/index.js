@@ -21,7 +21,7 @@ const resolvers = {
       cardsBySet: async (parent, { set, year }, { db }) => {
         try {
           const results = await db.Set.findAll({
-            where: { setname: set, setyear: year },
+            where: { setname: {[Sequelize.Op.like]: set}, setyear: year },
           });
           if (results.length) {
             const setId = results[0].dataValues?.id
@@ -41,12 +41,15 @@ const resolvers = {
           throw Error(err);
         }
       },
-      cardsByName: async (parent, { cardname }, { db }) => {
-        cardname = "%"+cardname+"%"
+      cardsByName: async (parent, { cardname, sortBy, ascdesc }, { db }) => {
+        cardname = "%"+cardname+"%";
         try {
           const results = await db.Card.findAll({
             where: { cardname: {[Sequelize.Op.like]: cardname} },
             include: { model: db.Set, required: true },
+            order: [
+              [sortBy, ascdesc],
+            ],
           });
   
           return results;
@@ -55,7 +58,41 @@ const resolvers = {
           throw Error(err);
         }
       },
-
+      cardsBySetAndName: async (parent, { cardname, set, year, sortBy, ascdesc }, { db }) => {
+        cardname = "%"+cardname+"%";
+        set = "%"+set+"%";
+        year = "%"+year+"%";
+        try {
+          const results = await db.Set.findAll({
+            where: { setname: {[Sequelize.Op.like]: set}, setyear: {[Sequelize.Op.like]: year} },
+          });
+          if (results.length) {
+            const setIds = [];
+            results.map((result) => {
+              setIds.push(result.id)
+            })
+            console.log(setIds);
+            const cardresults = await db.Card.findAll({
+              where: { 
+                setId: {[Sequelize.Op.in]: setIds},
+                cardname: {[Sequelize.Op.like]: cardname}
+              },
+              include: { model: db.Set, required: true },
+              order: [
+                [sortBy, ascdesc],
+              ],
+            });
+            if (cardresults.length) {
+              return cardresults
+            }
+          }
+          throw Error("Failed to get cards by set");
+        } catch (err) {
+          console.log(err);
+  
+          throw Error(err);
+        }
+      },
     },
     Upload: GraphQLUpload,
     Mutation: {
