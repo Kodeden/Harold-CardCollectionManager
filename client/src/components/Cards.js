@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Cards.css";
-import { ApolloClient, InMemoryCache, gql, useMutation, useLazyQuery } from '@apollo/client';
+import { gql, useMutation, useLazyQuery } from '@apollo/client';
 import Card from "./Card.js"
 
 
@@ -129,6 +129,7 @@ export default function Cards() {
                 >
                     <option value="cardnumber">Card #</option>
                     <option value="cardname">Card Name</option>
+                    <option value="price">Price</option>
                     <option value="majorcard">Major Card</option>
                     <option value="quantityowned">Number Owned</option>
                     <option value="cardcondition">Card Condition</option>
@@ -237,7 +238,7 @@ export default function Cards() {
                     </li>
                 </ul>
                 <ul className="cardlist">    
-                    {(!loading && !error && (data != undefined)) ? (data.cardsBySetAndName.map((card) => {
+                    {(!loading && !error && (data !== undefined)) ? (data.cardsBySetAndName.map((card) => {
                     return (
                         <Card
                             key={card.id}
@@ -246,6 +247,7 @@ export default function Cards() {
                         />
                     );
                     })) : null }
+                    {loading ? (<div>LOADING</div>) : null}
                 </ul>
             </div>
         </main>

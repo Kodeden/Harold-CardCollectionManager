@@ -1,5 +1,5 @@
 import { isConstValueNode } from "graphql";
-import { Sequelize } from "sequelize";
+import { FLOAT, INTEGER, Sequelize } from "sequelize";
 import { GraphQLUpload } from "graphql-upload-minimal";
 import fs from "fs";
 import path from "path";
@@ -71,14 +71,28 @@ const resolvers = {
             results.map((result) => {
               setIds.push(result.id)
             })
-            console.log(setIds);
             const cardresults = await db.Card.findAll({
+              attributes: [
+                'id',
+                'cardnumber',
+                'cardname',
+                'price',
+                'majorcard',
+                'quantityowned',
+                'cardcondition',
+                'grade',
+                'grader',
+                //[Sequelize.literal(`cast when cardnumber ~ '^[0-9]*$' then cardnumber::integer else null end`), `sort`]
+              ],
               where: { 
                 setId: {[Sequelize.Op.in]: setIds},
                 cardname: {[Sequelize.Op.like]: cardname}
               },
               include: { model: db.Set, required: true },
               order: [
+                //[db.Sequelize.col('cardnumber'), ascdesc],
+                //[Sequelize.literal(`"cardnumber" COLLATE natural`), 'ASC']
+                [(sortBy === 'cardnumber') ? Sequelize.literal('LENGTH(cardnumber)') : sortBy, ascdesc],
                 [sortBy, ascdesc],
               ],
             });
@@ -98,11 +112,13 @@ const resolvers = {
     Mutation: {
       singleUpload: async (parent, { file }) => {
         const { createReadStream, filename, mimetype, encoding } = await file;
-  
+        console.log('testing testing');
+        console.log(parent);
+        console.log(file);
         // // Invoking the `createReadStream` will return a Readable Stream.
         // // See https://nodejs.org/api/stream.html#stream_readable_streams
         const stream = createReadStream();
-  
+        
         // // This is purely for demonstration purposes and will overwrite the
         // // local-file-output.txt in the current working directory on EACH upload.
         // const out = fs.createWriteStream('local-file-output.txt');

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./Card.css";
 import { gql, useMutation } from '@apollo/client';
-import { AiFillDelete, AiFillEdit, AiFillFileImage } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit, AiFillFileImage, AiFillCloseCircle } from "react-icons/ai";
 import Collapse from '@mui/material/Collapse';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
 
 function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardcondition, grade, grader, set, deleteCard }) {
   const [newPrice, setNewPrice] = useState(price);
@@ -12,7 +14,8 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
   const [newGrade, setNewGrade] = useState(grade);
   const [newGrader, setNewGrader] = useState(grader);
   const [edit, setEdit] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const toggleEditMode = () => {
     setEdit(!edit);
@@ -78,7 +81,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
           ></input>
           ) : (
           <span onDoubleClick={toggleEditMode} id={id}>
-            ${newPrice}
+            ${(String(newPrice).indexOf('.') !== -1) ? String(newPrice).padEnd(String(newPrice).indexOf('.')+3, '0') : newPrice}
           </span>)
         }
       </div>
@@ -149,31 +152,41 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
       <div>{set.setname}</div>
       <div>{set.setyear}</div>
       <button
-        onClick={() => {}}
+        onClick={() => {setDialogOpen(!dialogOpen)}}
         >
         <AiFillFileImage />
       </button>
       <button
-        onClick={() => {setOpen(!open)}}
+        onClick={() => {setDeleteOpen(!deleteOpen)}}
         >
         <AiFillDelete />
       </button>
-      <Collapse in={open}>
+      <Collapse in={deleteOpen}>
         Really delete #{cardnumber} - {cardname}? 
         <button
           onClick={() => {
-            setOpen(false);
+            setDeleteOpen(false);
             deleteCard(id);
           }}
           >
           Yes
         </button>
         <button
-          onClick={() => {setOpen(false)}}
+          onClick={() => {setDeleteOpen(false)}}
           >
           No
         </button>
       </Collapse>
+      <Dialog
+        open={dialogOpen}>
+        <DialogTitle>Card Images<button
+          onClick={() => {setDialogOpen(!dialogOpen)}}
+          >
+          <AiFillCloseCircle />
+          </button></DialogTitle>
+        <div>          
+        </div>
+      </Dialog>
     </li>
   );
 }

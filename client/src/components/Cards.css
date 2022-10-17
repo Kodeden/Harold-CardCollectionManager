@@ -18,9 +18,8 @@ main {
 
 li {
     display: grid;
-    grid-template-columns: 3.5% 5% 20% 6% 6% 7% 8% 5% 8% 10% 8% 8% 5.5%;
+    grid-template-columns: 3.5% 5% 20% 6% 6% 7% 8% 5% 8% 10% 8% 6% 5.5%;
     width: 98%;
-    min-width: 1200px;
     align-items: stretch;
 }
 
@@ -49,7 +48,6 @@ li div {
 }
 
 ul {
-    overflow-x: hidden;
 }
 
 .MuiCollapse-root {

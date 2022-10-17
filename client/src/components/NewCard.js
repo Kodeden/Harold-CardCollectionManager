@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import "./NewCard.css";
-import { ApolloClient, InMemoryCache, gql, useMutation } from '@apollo/client';
-import { createUploadLink } from 'apollo-upload-client';
+import { gql, useMutation } from '@apollo/client';
 
 
 export default function NewCard() {
 
-    // const client = new ApolloClient({
-    //     link: createUploadLink({
-    //         uri: 'http://localhost:4000',
-    //     }),
-    //     cache: new InMemoryCache(),
-    //   });
     const [message, setMessage] = useState("");
 
     const ADD_CARD = gql`
@@ -49,7 +42,9 @@ export default function NewCard() {
     }
     `;
     const [uploadFile] = useMutation(ADD_FILE, {
-        onCompleted: data => console.log(data)
+        onCompleted: data => {
+            console.log(data)
+        }
     });
     const [addCard] = useMutation(ADD_CARD, {
         onCompleted: data => setMessage(data.addCard.cardname + " added")
@@ -212,7 +207,7 @@ export default function NewCard() {
                             grader: grader},
                           fetchPolicy : "network-only"})}
             >Add Card</button>
-            {/*<button 
+            <button 
                     type="text"
                     name="text"
                     onClick={(e) => uploadFile({
@@ -224,7 +219,7 @@ export default function NewCard() {
                     type="text"
                     name="text"
                     onClick={(e) => {console.log((frontpic))}}
-                        >test2</button>*/}
+                        >test2</button>
                         <div>{message ? message : null}</div>
         </main>
     );
