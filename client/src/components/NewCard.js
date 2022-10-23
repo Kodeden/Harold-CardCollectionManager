@@ -42,9 +42,7 @@ export default function NewCard() {
     }
     `;
     const [uploadFile] = useMutation(ADD_FILE, {
-        onCompleted: data => {
-            console.log(data)
-        }
+        onCompleted: data => console.log(data)
     });
     const [addCard] = useMutation(ADD_CARD, {
         onCompleted: data => setMessage(data.addCard.cardname + " added")
@@ -174,7 +172,7 @@ export default function NewCard() {
                     type="file" 
                     accept="image/*" 
                     multiple="" 
-                    onChange={async (e) => {
+                    onChange={(e) => {
                         setFrontpic(e.target.files[0]);
                     }} />
                 {frontpic ? <img alt="Front" className="cardimage" src={URL.createObjectURL(frontpic)} /> : null}

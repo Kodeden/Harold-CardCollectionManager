@@ -92,7 +92,8 @@ const resolvers = {
               order: [
                 //[db.Sequelize.col('cardnumber'), ascdesc],
                 //[Sequelize.literal(`"cardnumber" COLLATE natural`), 'ASC']
-                [(sortBy === 'cardnumber') ? Sequelize.literal('LENGTH(cardnumber)') : sortBy, ascdesc],
+                //[sortBy, ascdesc],
+                [(sortBy === 'cardnumber') ? Sequelize.literal(`cast(cardnumber AS INTEGER)`) : sortBy, ascdesc],
                 [sortBy, ascdesc],
               ],
             });
