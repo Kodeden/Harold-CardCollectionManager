@@ -5,15 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { createUploadLink } from 'apollo-upload-client';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
 const client = new ApolloClient({
-  link: createUploadLink({
-      uri: 'http://localhost:4000',
-  }),
+  uri: 'http://localhost:4000',
   cache: new InMemoryCache(),
 });
 

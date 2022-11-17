@@ -6,21 +6,12 @@ import {
 import express from "express";
 import http from "http";
 import db from "../models/index.js";
-import { graphqlUploadExpress } from "graphql-upload-minimal";
+
 
 async function startApolloServer(typeDefs, resolvers) {
-  // Required logic for integrating with Express
   const app = express();
-  app.use (
-    graphqlUploadExpress()
-  )
-  // Our httpServer handles incoming requests to our Express app.
-  // Below, we tell Apollo Server to "drain" this httpServer,
-  // enabling our servers to shut down gracefully.
   const httpServer = http.createServer(app);
 
-  // Same ApolloServer initialization as before, plus the drain plugin
-  // for our httpServer.
   const server = new ApolloServer({
     typeDefs,
     resolvers,

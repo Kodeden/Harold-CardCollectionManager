@@ -37,6 +37,12 @@ export default (sequelize, DataTypes) => {
         grader: {
           type: DataTypes.STRING,
         },
+        frontpic: {
+          type: DataTypes.STRING,
+        },
+        backpic: {
+          type: DataTypes.STRING,
+        },
       },
       {
         freezeTableName: true,

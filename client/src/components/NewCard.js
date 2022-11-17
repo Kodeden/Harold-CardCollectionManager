@@ -34,16 +34,6 @@ export default function NewCard() {
       }
     }
     `;
-    const ADD_FILE = gql`
-    mutation singleUpload($file: Upload!) {
-      singleUpload(file: $file) {
-        url
-      }
-    }
-    `;
-    const [uploadFile] = useMutation(ADD_FILE, {
-        onCompleted: data => console.log(data)
-    });
     const [addCard] = useMutation(ADD_CARD, {
         onCompleted: data => setMessage(data.addCard.cardname + " added")
     });
@@ -60,29 +50,32 @@ export default function NewCard() {
     const [condition, setCondition] = useState("");
     const [grade, setGrade] = useState("");
     const [grader, setGrader] = useState("");
-    const [frontpic, setFrontpic] = useState("");
-    const [backpic, setBackpic] = useState("");
-    const getBase64 = file => {
-        return new Promise(resolve => {
-          let fileInfo;
-          let baseURL = "";
-          // Make new FileReader
-          let reader = new FileReader();
+    const [frontpic, setFrontpic] = useState(null);
+    const [backpic, setBackpic] = useState(null);
+    const [formData, setFormData] = useState(new FormData());
+    const [response, setResponse] = useState("");
     
-          // Convert the file to base64 text
-          reader.readAsDataURL(file);
+    // const getBase64 = file => {
+    //     return new Promise(resolve => {
+    //       let fileInfo;
+    //       let baseURL = "";
+    //       // Make new FileReader
+    //       let reader = new FileReader();
     
-          // on reader load somthing...
-          reader.onload = () => {
-            // Make a fileInfo Object
-            console.log("Called", reader);
-            baseURL = reader.result;
-            console.log(baseURL);
-            resolve(baseURL);
-          };
-          console.log(fileInfo);
-        });
-      };
+    //       // Convert the file to base64 text
+    //       reader.readAsDataURL(file);
+    
+    //       // on reader load somthing...
+    //       reader.onload = () => {
+    //         // Make a fileInfo Object
+    //         console.log("Called", reader);
+    //         baseURL = reader.result;
+    //         console.log(baseURL);
+    //         resolve(baseURL);
+    //       };
+    //       console.log(fileInfo);
+    //     });
+    //   };
 
     return (
         <main>
@@ -208,15 +201,20 @@ export default function NewCard() {
             <button 
                     type="text"
                     name="text"
-                    onClick={(e) => uploadFile({
-                        variables: {
-                            file: frontpic},
-                          fetchPolicy : "network-only"})}
+                    onClick={(e) => {
+                        formData.append(frontpic.name, frontpic);
+                        setResponse(fetch("http://localhost:4001/images", {
+                            mode: 'no-cors',
+                            method: "POST",
+                            body: formData,
+                        }));
+                        setFormData(new FormData())
+                    }}
             >test</button>
             <button 
                     type="text"
                     name="text"
-                    onClick={(e) => {console.log((frontpic))}}
+                    onClick={ (e) => {console.log((frontpic))}}
                         >test2</button>
                         <div>{message ? message : null}</div>
         </main>

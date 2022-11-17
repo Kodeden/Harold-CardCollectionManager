@@ -1,16 +1,12 @@
 import { gql } from "apollo-server-express";
+import { graphqlUploadExpress } from "graphql-upload-minimal";
+import resolvers from "../resolvers/index.js";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
 
-  scalar Upload
-
-  type File {
-    url: String!
-  }
-  
   type Card {
     id: ID
     cardnumber: String!
@@ -21,8 +17,8 @@ const typeDefs = gql`
     cardcondition: Int
     grade: Float
     grader: String
-    frontpic: File
-    backpic: File
+    frontpic: String
+    backpic: String
     set: Set
   }
   type Set {
@@ -40,8 +36,7 @@ const typeDefs = gql`
 
   }
   type Mutation {
-    singleUpload(file: Upload!): File!
-    addCard(cardnumber: String, cardname: String, price: Float, setname: String, setyear: String, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String, frontpic: Upload, backpic: Upload): Card
+    addCard(cardnumber: String, cardname: String, price: Float, setname: String, setyear: String, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String, frontpic: String, backpic: String): Card
     deleteCard(id: String): String
     updateCard(id: String, price: Float, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String): Card
     changePrice(id: String, price: Float): Card

@@ -4,11 +4,6 @@ import { gql, useMutation, useLazyQuery } from '@apollo/client';
 import Card from "./Card.js"
 
 
-// const client = new ApolloClient({
-//   uri: 'http://localhost:4000',
-//   cache: new InMemoryCache(),
-// });
-
 export default function Cards() {
    
     const [cardName, setCardName] = useState("");
@@ -16,7 +11,6 @@ export default function Cards() {
     const [year, setYear] = useState("");
     const [sortBy, setSortBy] = useState("cardnumber");
     const [ascdesc, setAscdesc] = useState("Asc");
-    //const [cardlist, setCardlist] = useState([]);
 
 
     const CARDS = gql`
@@ -78,33 +72,6 @@ export default function Cards() {
                     onChange={(e) => setCardName(e.target.value)}
                     value={cardName}
                 ></input>
-                {/*<button 
-                    type="text"
-                    name="text"
-                    onClick={(e) => (
-                        client.query({
-                          query: gql`
-                            query Query($cardname: String) {
-                                cardsByName(cardname: $cardname) {
-                                id
-                                cardnumber
-                                cardname
-                                price
-                                majorcard
-                                quantityowned
-                                cardcondition
-                                grade
-                                grader
-                                set {
-                                    setname
-                                    setyear
-                                }
-                                }
-                            }
-                          `, 
-                          variables: {cardname: cardName}
-                        }, ).then((result) => setCardlist(result.data.cardsByName)))}
-                    >Search by Name</button>*/}
                 </div>
                 <div>Set Name:
                 <input
@@ -144,66 +111,6 @@ export default function Cards() {
                     <option value="desc">Descending</option>
                 </select>
                 </div>
-                {/*<button 
-                    type="text"
-                    name="text"
-                    onClick={(e) => (
-                        client.query({
-                          query: gql`
-                            query Query($set: String, $year: String) {
-                                cardsBySet(set: $set, year: $year) {
-                                id
-                                cardnumber
-                                cardname
-                                price
-                                majorcard
-                                quantityowned
-                                cardcondition
-                                grade
-                                grader
-                                set {
-                                    setname
-                                    setyear
-                                }
-                                }
-                            }
-                          `, 
-                          variables: {set: setName, year: year}
-                        }, ).then((result) => setCardlist(result.data.cardsBySet)))}
-                >Search by Set and Year</button>
-                <button 
-                    type="text"
-                    name="text"
-                    onClick={(e) => (
-                        client.query({
-                          query: gql`
-                            query  Query {
-                                cards {
-                                    id
-                                    cardnumber
-                                    cardname
-                                    price
-                                    majorcard
-                                    quantityowned
-                                    cardcondition
-                                    grade
-                                    grader
-                                    set {
-                                        setname
-                                        setyear
-                                      }
-                                }
-
-                            }
-                          `,
-                          fetchPolicy : "network-only"
-                        }).then((result) => setCardlist(result.data.cards)))}
-                >All Cards</button>
-                                <button 
-                    type="text"
-                    name="text"
-                    onClick={(e) => (setSearch(true))}
-                    >All Cards 2</button>*/}
                     <button 
                     type="text"
                     name="text"
