@@ -7,9 +7,9 @@ function createServer() {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
 
-  app.use(express.static("client"));
+  app.use(express.static("client/build"));
   app.use(express.static("images"));
-  
+
   app.use(imagesRouter);
 
   return app;

@@ -1,4 +1,5 @@
 import path from "path";
+import { uuid } from "uuidv4";
 
 class ImagesController {
   constructor() {}
@@ -6,19 +7,22 @@ class ImagesController {
   async createImage(req, res) {
     try {
       const files = req.files;
-      console.log(files);
-      var __dirname = path.resolve();
+      const __dirname = path.resolve();
+      var names = [];
 
       Object.keys(files).forEach((key) => {
-        const filePath = path.join(__dirname, "../public/images/", files[key].name);
+        var newname = uuid() + files[key].name.substring(files[key].name.lastIndexOf('.'), files[key].name.length);
+        const filePath = path.join(__dirname, "./images/", newname);
+        names.push(newname);
         files[key].mv(filePath, (err) => {
           if (err)
             return res.status(500).json({ status: "error", message: err });
         });
       });
+      console.log(names);
       return res.json({
         status: "Success",
-        message: Object.keys(files).toString(),
+        message: names,
       });
     } catch (e) {
       console.log(e);

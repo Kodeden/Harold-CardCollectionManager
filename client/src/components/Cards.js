@@ -25,6 +25,8 @@ export default function Cards() {
                 cardcondition
                 grade
                 grader
+                frontpic
+                backpic
                 set {
                 setname
                 setyear

@@ -18,7 +18,9 @@ export default function NewCard() {
         $quantityowned: Int, 
         $cardcondition: Int, 
         $grade: Float,
-        $grader: String) {
+        $grader: String,
+        $frontpic: String,
+        $backpic: String) {
       addCard(
             cardnumber: $cardnumber, 
             cardname: $cardname, 
@@ -29,7 +31,9 @@ export default function NewCard() {
             quantityowned: $quantityowned, 
             cardcondition: $cardcondition, 
             grade: $grade, 
-            grader: $grader) {
+            grader: $grader, 
+            frontpic: $frontpic, 
+            backpic: $backpic) {
         cardname
       }
     }
@@ -53,8 +57,22 @@ export default function NewCard() {
     const [frontpic, setFrontpic] = useState(null);
     const [backpic, setBackpic] = useState(null);
     const [formData, setFormData] = useState(new FormData());
-    const [response, setResponse] = useState("");
+    const [response, setResponse] = useState([]);
     
+    const uploadImages = async () => {
+        if (frontpic) {formData.append(frontpic.name, frontpic)};
+        if (backpic) {formData.append(backpic.name, backpic)};
+        if (backpic || frontpic) {
+            const res = await fetch("http://localhost:4001/images", {
+                method: "POST",
+                body: formData,
+            });
+            const names = await res.json()
+            console.log(names);
+            setResponse(names.message);
+            console.log(response);
+            setFormData(new FormData()); }
+    }
     // const getBase64 = file => {
     //     return new Promise(resolve => {
     //       let fileInfo;
@@ -201,21 +219,31 @@ export default function NewCard() {
             <button 
                     type="text"
                     name="text"
-                    onClick={(e) => {
-                        formData.append(frontpic.name, frontpic);
-                        setResponse(fetch("http://localhost:4001/images", {
-                            mode: 'no-cors',
-                            method: "POST",
-                            body: formData,
-                        }));
-                        setFormData(new FormData())
+                    onClick={async (e) => {
+                        await uploadImages();
+                        addCard({
+                            variables: {
+                                cardnumber: cardNumber, 
+                                cardname: cardName, 
+                                price: Number(price), 
+                                setname: setName, 
+                                setyear: year, 
+                                majorcard: Boolean(majorCard), 
+                                quantityowned: Number(numberOwned), 
+                                cardcondition: Number(condition),
+                                grade: Number(grade), 
+                                grader: grader,
+                                frontpic: response[0],
+                                backpic: response[1]},
+                              fetchPolicy : "network-only"})
+                            
                     }}
-            >test</button>
+            >New Add Card</button>
             <button 
                     type="text"
                     name="text"
-                    onClick={ (e) => {console.log((frontpic))}}
-                        >test2</button>
+                    onClick={ (e) => {console.log((response))}}
+            >test2</button>
                         <div>{message ? message : null}</div>
         </main>
     );

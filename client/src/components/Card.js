@@ -6,7 +6,7 @@ import Collapse from '@mui/material/Collapse';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 
-function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardcondition, grade, grader, set, deleteCard }) {
+function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardcondition, grade, grader, frontpic, backpic, set, deleteCard }) {
   const [newPrice, setNewPrice] = useState(price);
   const [newMajor, setNewMajor] = useState(majorcard);
   const [newQuantity, setNewQuantity] = useState(quantityowned);
@@ -184,7 +184,11 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
           >
           <AiFillCloseCircle />
           </button></DialogTitle>
-        <div>          
+        <div>
+          <div>{frontpic}</div>
+          <div>{backpic}</div>
+          <img src={`http://localhost:4001/${frontpic}`}></img>          
+          <img src={`http://localhost:4001/${backpic}`}></img>
         </div>
       </Dialog>
     </li>

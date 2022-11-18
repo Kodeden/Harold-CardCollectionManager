@@ -82,6 +82,8 @@ const resolvers = {
                 'cardcondition',
                 'grade',
                 'grader',
+                'frontpic',
+                'backpic',
                 //[Sequelize.literal(`cast when cardnumber ~ '^[0-9]*$' then cardnumber::integer else null end`), `sort`]
               ],
               where: { 
