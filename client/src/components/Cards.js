@@ -62,7 +62,14 @@ export default function Cards() {
         fetchPolicy : "network-only"
       });
     };
-    
+                        
+    const deleteImage = async () => {
+        await fetch("http://localhost:4001/images/", {
+            method: "DELETE",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({picname: "84727de1-eac2-45b3-817e-453e1265853b.png"})
+        });
+      }
 
     return (
         <main>
@@ -127,6 +134,13 @@ export default function Cards() {
                         fetchPolicy : "network-only"
                     }))}
                     >Search</button>
+                                        <button 
+                    type="text"
+                    name="text"
+                    onClick={(e) => (
+                        deleteImage("2a896c3f-7591-42c1-ae6e-ffda72a4954c.jpg")
+                        )}
+                    >Test</button>
             </div>
             <div>
                 <ul className="listheader">

@@ -52,6 +52,13 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
     }
   };
 
+  const deleteImage = async (frontpic, backpic) => {
+    const res = await fetch("http://localhost:4001/images", {
+        method: "DELETE",
+        body: {frontpic: frontpic, backpic: backpic},
+    });
+  }
+
   return (
     <li id={id}>
       {edit ? (
@@ -166,6 +173,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
         <button
           onClick={() => {
             setDeleteOpen(false);
+            deleteImage(frontpic, backpic);
             deleteCard(id);
           }}
           >

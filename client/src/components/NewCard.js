@@ -56,22 +56,20 @@ export default function NewCard() {
     const [grader, setGrader] = useState("");
     const [frontpic, setFrontpic] = useState(null);
     const [backpic, setBackpic] = useState(null);
-    const [formData, setFormData] = useState(new FormData());
-    const [response, setResponse] = useState([]);
     
-    const uploadImages = async () => {
-        if (frontpic) {formData.append(frontpic.name, frontpic)};
-        if (backpic) {formData.append(backpic.name, backpic)};
-        if (backpic || frontpic) {
+    const uploadImage = async (file) => {
+        const formData = new FormData();
+        if (file) {formData.append(file.name, file)};
+        if (file) {
             const res = await fetch("http://localhost:4001/images", {
                 method: "POST",
                 body: formData,
             });
             const names = await res.json()
             console.log(names);
-            setResponse(names.message);
-            console.log(response);
-            setFormData(new FormData()); }
+            return names.message[0];}
+        else return null;
+
     }
     // const getBase64 = file => {
     //     return new Promise(resolve => {
@@ -202,25 +200,8 @@ export default function NewCard() {
             <button 
                     type="text"
                     name="text"
-                    onClick={(e) => addCard({
-                        variables: {
-                            cardnumber: cardNumber, 
-                            cardname: cardName, 
-                            price: Number(price), 
-                            setname: setName, 
-                            setyear: year, 
-                            majorcard: Boolean(majorCard), 
-                            quantityowned: Number(numberOwned), 
-                            cardcondition: Number(condition),
-                            grade: Number(grade), 
-                            grader: grader},
-                          fetchPolicy : "network-only"})}
-            >Add Card</button>
-            <button 
-                    type="text"
-                    name="text"
                     onClick={async (e) => {
-                        await uploadImages();
+                        
                         addCard({
                             variables: {
                                 cardnumber: cardNumber, 
@@ -233,17 +214,13 @@ export default function NewCard() {
                                 cardcondition: Number(condition),
                                 grade: Number(grade), 
                                 grader: grader,
-                                frontpic: response[0],
-                                backpic: response[1]},
-                              fetchPolicy : "network-only"})
+                                frontpic: await uploadImage(frontpic),
+                                backpic: await uploadImage(backpic)},
+                              fetchPolicy : "network-only"});
+                        
                             
                     }}
             >New Add Card</button>
-            <button 
-                    type="text"
-                    name="text"
-                    onClick={ (e) => {console.log((response))}}
-            >test2</button>
                         <div>{message ? message : null}</div>
         </main>
     );

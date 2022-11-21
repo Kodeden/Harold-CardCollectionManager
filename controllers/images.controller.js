@@ -1,5 +1,6 @@
 import path from "path";
 import { uuid } from "uuidv4";
+import fs from "fs";
 
 class ImagesController {
   constructor() {}
@@ -27,6 +28,25 @@ class ImagesController {
     } catch (e) {
       console.log(e);
       return res.status(500).json({ status: "error", message: e });
+    }
+  }
+
+  async deleteImage(req, res) {
+    try {
+      const __dirname = path.resolve();
+      console.log(req.body.picname)
+      // const filePath = path.join(__dirname, "./images/", req.body.picname);
+      // console.log(filePath);
+      // fs.unlink(filePath, (err) => {
+      //     if (err)
+      //       return res.status(500).json({ status: "error1", message: err });
+      //   });
+      return res.json({
+        status: "Success"
+      });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ status: "error2", message: e });
     }
   }
 }

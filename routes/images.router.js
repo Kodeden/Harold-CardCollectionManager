@@ -11,4 +11,9 @@ imagesRouter.post(
   (req, res) => imagesController.createImage(req, res)
 );
 
+imagesRouter.delete(
+  "/images",
+  (req, res) => imagesController.deleteImage(req, res)
+);
+
 export default imagesRouter;

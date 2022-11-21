@@ -1,7 +1,7 @@
 .App {
   text-align: center;
   color: #181616;
-  background-color: #bfd8ef;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -11,19 +11,12 @@
   flex-shrink: 0;
 }
 
-.tabcontainer {
-  align-self: flex-start;
-  flex-direction: row;
+.header {
   display: flex;
-  background-color: #bfd8ef;
-}
-
-.tab {
-  border: 1px solid black;
-  border-radius: 15px 15px 0 0;
-  border-bottom: none;
-  padding: 5px;
-  margin: 0 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
 }
 
 .list {
@@ -37,4 +30,27 @@
 body {
   background-color: #bfd8ef;
   height: 100vh;
+}
+
+#ccbox {
+  background-image: linear-gradient(to right, #FA002D, #0A2769);
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: .25em;
+}
+
+#cc {
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24.3343px;
+  line-height: 37px;
+
+  color: #FFFFFF;
+
+  transform: rotate(20.2deg);
 }
