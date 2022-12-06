@@ -35,12 +35,13 @@ class ImagesController {
     try {
       const __dirname = path.resolve();
       console.log(req.body.picname)
-      // const filePath = path.join(__dirname, "./images/", req.body.picname);
-      // console.log(filePath);
-      // fs.unlink(filePath, (err) => {
-      //     if (err)
-      //       return res.status(500).json({ status: "error1", message: err });
-      //   });
+      const filePath = path.join(__dirname, "./images/", req.body.picname);
+      console.log(filePath);
+      fs.unlink(filePath, (err) => {
+          if (err)
+            null;
+            // return res.status(500).json({ status: "error1", message: err });
+        });
       return res.json({
         status: "Success"
       });

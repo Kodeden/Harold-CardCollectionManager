@@ -258,6 +258,44 @@ const resolvers = {
           throw Error("There was something wrong while updating a card");
         }
       },
+      changeFrontPic: async (parent, { id, frontpic }, { db }) => {
+        try {
+          let results = await db.Card.update(
+            { frontpic: frontpic },
+            {returning: true, 
+              where: { id: id }, 
+              }
+          );
+          results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
+            where: { id: id }
+          });
+          console.log(results);
+          return results[0].dataValues;
+        } catch (err) {
+          console.log(err);
+          throw Error("There was something wrong while updating a card");
+        }
+      },
+      changeBackPic: async (parent, { id, backpic }, { db }) => {
+        try {
+          let results = await db.Card.update(
+            { backpic: backpic },
+            {returning: true, 
+              where: { id: id }, 
+              }
+          );
+          results = await db.Card.findAll({
+            include: { model: db.Set, required: true },
+            where: { id: id }
+          });
+          console.log(results);
+          return results[0].dataValues;
+        } catch (err) {
+          console.log(err);
+          throw Error("There was something wrong while updating a card");
+        }
+      },
     },
   };
   export default resolvers;

@@ -43,6 +43,8 @@ const typeDefs = gql`
     changeMajor(id: String, majorcard: Boolean): Card
     changeQuantity(id: String, quantityowned: String): Card
     changeCardCondition(id: String, cardcondition: String): Card
+    changeFrontPic(id: String, frontpic: String): Card
+    changeBackPic(id: String, backpic: String): Card
   }
 `;
 

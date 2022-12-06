@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Cards.css";
 import { gql, useMutation, useLazyQuery } from '@apollo/client';
 import Card from "./Card.js"
+import { Link } from "react-router-dom";
 
 
 export default function Cards() {
@@ -62,47 +63,46 @@ export default function Cards() {
         fetchPolicy : "network-only"
       });
     };
-                        
-    const deleteImage = async () => {
-        await fetch("http://localhost:4001/images/", {
-            method: "DELETE",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({picname: "84727de1-eac2-45b3-817e-453e1265853b.png"})
-        });
-      }
+                    
 
     return (
         <main>
-            <div className="inputs">
-                <div>Card Name:
+            <div className="inputbox">
+                <div className="inputheader">Search cards</div>
+                <div className="inputs">
+                <div>
                 <input
                     type="text"
                     name="text"
                     onChange={(e) => setCardName(e.target.value)}
                     value={cardName}
+                    placeholder="Card Name"
                 ></input>
                 </div>
-                <div>Set Name:
+                <div>
                 <input
                     type="text"
                     name="text"
                     onChange={(e) => setSetName(e.target.value)}
                     value={setName}
+                    placeholder="Set Name"
                 ></input>
                 </div>
-                <div>Year:
+                <div>
                 <input
                     type="text"
                     name="text"
                     onChange={(e) => setYear(e.target.value)}
                     value={year}
+                    placeholder="Year"
                 ></input>
                 </div>
-                <div>Sort by:
+                <div>
                 <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                 >
+                    <option value="cardnumber">Sort by</option>
                     <option value="cardnumber">Card #</option>
                     <option value="cardname">Card Name</option>
                     <option value="price">Price</option>
@@ -112,6 +112,8 @@ export default function Cards() {
                     <option value="grade">Grade</option>
                     <option value="grader">Grader</option>
                 </select>
+                </div>
+                <div>
                 <select
                     value={ascdesc}
                     onChange={(e) => setAscdesc(e.target.value)}
@@ -120,7 +122,8 @@ export default function Cards() {
                     <option value="desc">Descending</option>
                 </select>
                 </div>
-                    <button 
+                    <div 
+                    className="gradbutton searchbutton"
                     type="text"
                     name="text"
                     onClick={(e) => (getCards({ 
@@ -133,31 +136,26 @@ export default function Cards() {
                         },
                         fetchPolicy : "network-only"
                     }))}
-                    >Search</button>
-                                        <button 
-                    type="text"
-                    name="text"
-                    onClick={(e) => (
-                        deleteImage("2a896c3f-7591-42c1-ae6e-ffda72a4954c.jpg")
-                        )}
-                    >Test</button>
+                    >Search</div>
             </div>
-            <div>
+            </div>
+            <div className="list">
+                <div className="listtitle"><div>Card list</div><Link to="/NewCard" className="nounderline"><div className="gradbutton">Add Card</div></Link></div>
                 <ul className="listheader">
-                    <li>
-                        <div>Edit</div>
-                        <div>Card #</div>
-                        <div>Card Name</div>
-                        <div>Price</div>
-                        <div>Major</div>
-                        <div>Owned</div>
-                        <div>Condition</div>
-                        <div>Grade</div>
-                        <div>Grader</div>
-                        <div>Set Name</div>
-                        <div>Set Year</div>
-                        <div>Images</div>
-                        <div>Delete</div>
+                    <li className="listheaders">
+                        <div>EDIT</div>
+                        <div>CARD#</div>
+                        <div>CARD NAME</div>
+                        <div>PRICE</div>
+                        <div>MAJOR</div>
+                        <div>OWNED</div>
+                        <div>CONDITION</div>
+                        <div>GRADE</div>
+                        <div>GRADER</div>
+                        <div>SET NAME</div>
+                        <div>SET YEAR</div>
+                        <div>IMAGES</div>
+                        <div>DELETE</div>
                     </li>
                 </ul>
                 <ul className="cardlist">    

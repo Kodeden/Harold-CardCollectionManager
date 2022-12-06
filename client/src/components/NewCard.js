@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "./NewCard.css";
 import { gql, useMutation } from '@apollo/client';
-
+import DialogContent from '@mui/material/DialogContent';
+import Dialog from '@mui/material/Dialog';
+import { Link } from "react-router-dom";
 
 export default function NewCard() {
 
@@ -56,6 +57,7 @@ export default function NewCard() {
     const [grader, setGrader] = useState("");
     const [frontpic, setFrontpic] = useState(null);
     const [backpic, setBackpic] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
     
     const uploadImage = async (file) => {
         const formData = new FormData();
@@ -71,157 +73,167 @@ export default function NewCard() {
         else return null;
 
     }
-    // const getBase64 = file => {
-    //     return new Promise(resolve => {
-    //       let fileInfo;
-    //       let baseURL = "";
-    //       // Make new FileReader
-    //       let reader = new FileReader();
-    
-    //       // Convert the file to base64 text
-    //       reader.readAsDataURL(file);
-    
-    //       // on reader load somthing...
-    //       reader.onload = () => {
-    //         // Make a fileInfo Object
-    //         console.log("Called", reader);
-    //         baseURL = reader.result;
-    //         console.log(baseURL);
-    //         resolve(baseURL);
-    //       };
-    //       console.log(fileInfo);
-    //     });
-    //   };
 
     return (
         <main>
-            <div>Card Name:
-                <input
-                    type="text"
-                    name="text"
-                    onChange={(e) => setCardName(e.target.value)}
-                    value={cardName}
-                ></input>
+            <Link to="/" className="nounderline alignleft"><div className="gradbutton backbutton">Back to List View</div></Link>
+            <div className="newcardcontainer">
+                <div className="newcardtitle">Add new card</div>
+                <div className="newcardinputs">
+                    <div><span>CARD NAME</span>
+                        <input
+                            type="text"
+                            name="text"
+                            onChange={(e) => setCardName(e.target.value)}
+                            value={cardName}
+                        ></input>
+                    </div>
+                    <div><span>SET NAME</span>
+                        <input
+                            type="text"
+                            name="text"
+                            onChange={(e) => setSetName(e.target.value)}
+                            value={setName}
+                        ></input>
+                    </div>
+                    <div><span>YEAR</span>
+                        <input
+                            type="text"
+                            name="text"
+                            onChange={(e) => setYear(e.target.value)}
+                            value={year}
+                        ></input>
+                    </div>
+                    <div><span>CARD NUMBER</span>
+                        <input
+                            type="text"
+                            name="text"
+                            onChange={(e) => setCardNumber(e.target.value)}
+                            value={cardNumber}
+                        ></input>
+                    </div>
+                    <div><span>PRICE</span>
+                        <span className="dollarsign"><input
+                            className="priceinput"
+                            type="number"
+                            name="text"
+                            onChange={(e) => setPrice(e.target.value)}
+                            value={price}
+                        ></input></span>
+                    </div>
+                    <div><span>NUMBER OWNED</span>
+                        <input
+                            type="number"
+                            name="text"
+                            onChange={(e) => setNumberOwned(e.target.value)}
+                            value={numberOwned}
+                        ></input>
+                    </div>
+                    <div><span>CONDITION</span>
+                        <input
+                            type="number"
+                            name="text"
+                            onChange={(e) => setCondition(e.target.value)}
+                            value={condition}
+                        ></input>
+                    </div>
+                    <div><span>GRADE</span>
+                        <input
+                            type="number"
+                            name="text"
+                            onChange={(e) => setGrade(e.target.value)}
+                            value={grade}
+                        ></input>
+                    </div>
+                    <div><span>GRADER</span>
+                        <input
+                            type="text"
+                            name="text"
+                            onChange={(e) => setGrader(e.target.value)}
+                            value={grader}
+                        ></input>
+                    </div>
+                    <div className="newmajorcard">
+                        <input
+                            type="checkbox"
+                            name="text"
+                            onChange={(e) => setMajorCard(e.target.checked)}
+                            checked={majorCard}
+                        ></input>
+                        <span>This is a major card</span>
+                    </div>
+                </div>
+                <div className="newcardimages">
+                    <div className="dropzonecontainer">
+                        <input 
+                            className="imageinput"
+                            type="file" 
+                            accept="image/*" 
+                            multiple="" 
+                            data-buttonText="Upload Front"
+                            onChange={(e) => {
+                                setFrontpic(e.target.files[0]);
+                            }} />
+                        <div className="dropzone"></div>
+                        {frontpic ? <img alt="Front" className="cardimage" src={URL.createObjectURL(frontpic)} /> : null}
+                        {frontpic ? null : <img alt="Front" className="signage" src={require("../images/frontimagesignage.png")} />}
+                    </div>
+                    <div className="dropzonecontainer">
+                        <input 
+                            className="imageinput"
+                            type="file" 
+                            accept="image/*" 
+                            multiple="" 
+                            onChange={(e) => {
+                                setBackpic(e.target.files[0])
+                            }} />
+                        <div className="dropzone"></div>
+                        {backpic ? <img alt="Back" className="cardimage" src={URL.createObjectURL(backpic)} /> : <img alt="Front" className="signage" src={require("../images/backimagesignage.png")} />}
+                    </div>
+                </div>
+                <button 
+                        className="gradbutton"
+                        type="text"
+                        name="text"
+                        onClick={async (e) => {
+                            const res = await addCard({
+                                variables: {
+                                    cardnumber: cardNumber, 
+                                    cardname: cardName, 
+                                    price: Number(price), 
+                                    setname: setName, 
+                                    setyear: year, 
+                                    majorcard: Boolean(majorCard), 
+                                    quantityowned: Number(numberOwned), 
+                                    cardcondition: Number(condition),
+                                    grade: Number(grade), 
+                                    grader: grader,
+                                    frontpic: await uploadImage(frontpic),
+                                    backpic: await uploadImage(backpic)},
+                                fetchPolicy : "network-only"});
+                            if (res) {setDialogOpen(true)};
+                        }}
+                >Add card</button>
+                            <div>{message ? message : null}</div>
             </div>
-            <div>Set Name:
-                <input
-                    type="text"
-                    name="text"
-                    onChange={(e) => setSetName(e.target.value)}
-                    value={setName}
-                ></input>
-            </div>
-            <div>Year:
-                <input
-                    type="text"
-                    name="text"
-                    onChange={(e) => setYear(e.target.value)}
-                    value={year}
-                ></input>
-            </div>
-            <div>Card Number:
-                <input
-                    type="text"
-                    name="text"
-                    onChange={(e) => setCardNumber(e.target.value)}
-                    value={cardNumber}
-                ></input>
-            </div>
-            <div>Price: $
-                <input
-                    type="number"
-                    name="text"
-                    onChange={(e) => setPrice(e.target.value)}
-                    value={price}
-                ></input>
-            </div>
-            <div>Major Card:
-                <input
-                    type="checkbox"
-                    name="text"
-                    onChange={(e) => setMajorCard(e.target.checked)}
-                    checked={majorCard}
-                ></input>
-            </div>
-            <div>Number Owned:
-                <input
-                    type="number"
-                    name="text"
-                    onChange={(e) => setNumberOwned(e.target.value)}
-                    value={numberOwned}
-                ></input>
-            </div>
-            <div>Condition:
-                <input
-                    type="number"
-                    name="text"
-                    onChange={(e) => setCondition(e.target.value)}
-                    value={condition}
-                ></input>
-            </div>
-            <div>Grade:
-                <input
-                    type="number"
-                    name="text"
-                    onChange={(e) => setGrade(e.target.value)}
-                    value={grade}
-                ></input>
-            </div>
-            <div>Grader:
-                <input
-                    type="text"
-                    name="text"
-                    onChange={(e) => setGrader(e.target.value)}
-                    value={grader}
-                ></input>
-            </div>
-            <div>
-                Front Image
-                <input 
-                    type="file" 
-                    accept="image/*" 
-                    multiple="" 
-                    onChange={(e) => {
-                        setFrontpic(e.target.files[0]);
-                    }} />
-                {frontpic ? <img alt="Front" className="cardimage" src={URL.createObjectURL(frontpic)} /> : null}
-            </div>
-            <div>
-                Back Image
-                <input 
-                    type="file" 
-                    accept="image/*" 
-                    multiple="" 
-                    onChange={(e) => {
-                        setBackpic(e.target.files[0])
-                    }} />
-                {backpic ? <img alt="Back" className="cardimage" src={URL.createObjectURL(backpic)} /> : null}
-            </div>
-            <button 
-                    type="text"
-                    name="text"
-                    onClick={async (e) => {
-                        
-                        addCard({
-                            variables: {
-                                cardnumber: cardNumber, 
-                                cardname: cardName, 
-                                price: Number(price), 
-                                setname: setName, 
-                                setyear: year, 
-                                majorcard: Boolean(majorCard), 
-                                quantityowned: Number(numberOwned), 
-                                cardcondition: Number(condition),
-                                grade: Number(grade), 
-                                grader: grader,
-                                frontpic: await uploadImage(frontpic),
-                                backpic: await uploadImage(backpic)},
-                              fetchPolicy : "network-only"});
-                        
-                            
-                    }}
-            >New Add Card</button>
-                        <div>{message ? message : null}</div>
+            <Dialog
+                open={dialogOpen}>
+                <DialogContent>
+                <div className="deletedialog">
+                    <img className="deleteimage" alt="thumbs up" src={require("../images/thumbsup.png")}></img>
+                    <div className="deletetitle">Card added</div>
+                    <div className="deletetext">#{cardNumber}, {cardName} added successfully.</div>
+                    <div className="deletebuttons">
+                    <button
+                    className="gradbutton"
+                    onClick={() => {setDialogOpen(false)}}
+                    >
+                    Okay
+                    </button>
+                    </div>
+                </div>
+                </DialogContent>
+            </Dialog>
         </main>
     );
   }
