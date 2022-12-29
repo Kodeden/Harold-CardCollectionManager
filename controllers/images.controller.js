@@ -20,7 +20,6 @@ class ImagesController {
             return res.status(500).json({ status: "error", message: err });
         });
       });
-      console.log(names);
       return res.json({
         status: "Success",
         message: names,
@@ -34,9 +33,7 @@ class ImagesController {
   async deleteImage(req, res) {
     try {
       const __dirname = path.resolve();
-      console.log(req.body.picname)
       const filePath = path.join(__dirname, "./images/", req.body.picname);
-      console.log(filePath);
       fs.unlink(filePath, (err) => {
           if (err)
             null;

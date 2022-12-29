@@ -175,7 +175,6 @@ const resolvers = {
             include: { model: db.Set, required: true },
             where: { id: id }
           });
-          console.log(results);
           return results[0].dataValues;
         } catch (err) {
           console.log(err);
@@ -270,7 +269,6 @@ const resolvers = {
             include: { model: db.Set, required: true },
             where: { id: id }
           });
-          console.log(results);
           return results[0].dataValues;
         } catch (err) {
           console.log(err);
@@ -289,7 +287,6 @@ const resolvers = {
             include: { model: db.Set, required: true },
             where: { id: id }
           });
-          console.log(results);
           return results[0].dataValues;
         } catch (err) {
           console.log(err);
