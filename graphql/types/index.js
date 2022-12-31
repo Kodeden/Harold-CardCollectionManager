@@ -14,7 +14,7 @@ const typeDefs = gql`
     price: Float
     majorcard: Boolean
     quantityowned: Int!
-    cardcondition: Int
+    cardcondition: String
     grade: Float
     grader: String
     frontpic: String
@@ -36,9 +36,9 @@ const typeDefs = gql`
 
   }
   type Mutation {
-    addCard(cardnumber: String, cardname: String, price: Float, setname: String, setyear: String, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String, frontpic: String, backpic: String): Card
+    addCard(cardnumber: String, cardname: String, price: Float, setname: String, setyear: String, majorcard: Boolean, quantityowned: Int, cardcondition: String, grade: Float, grader: String, frontpic: String, backpic: String): Card
     deleteCard(id: String): String
-    updateCard(id: String, price: Float, majorcard: Boolean, quantityowned: Int, cardcondition: Int, grade: Float, grader: String): Card
+    updateCard(id: String, price: Float, majorcard: Boolean, quantityowned: Int, cardcondition: String, grade: Float, grader: String): Card
     changePrice(id: String, price: Float): Card
     changeMajor(id: String, majorcard: Boolean): Card
     changeQuantity(id: String, quantityowned: String): Card

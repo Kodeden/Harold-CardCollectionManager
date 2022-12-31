@@ -17,7 +17,7 @@ export default function NewCard() {
         $setyear: String, 
         $majorcard: Boolean, 
         $quantityowned: Int, 
-        $cardcondition: Int, 
+        $cardcondition: String, 
         $grade: Float,
         $grader: String,
         $frontpic: String,
@@ -130,17 +130,32 @@ export default function NewCard() {
                         ></input>
                     </div>
                     <div><span>CONDITION</span>
-                        <input
-                            type="number"
-                            name="text"
-                            onChange={(e) => setCondition(e.target.value)}
+                        <select
                             value={condition}
-                        ></input>
+                            onChange={(e) => {
+                                setCondition(e.target.value)
+                                console.log(condition)
+                            }}
+                        >
+                            <option value=""></option>
+                            <option value="P">P</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="VG">VG</option>
+                            <option value="VG-Ex">VG-Ex</option>
+                            <option value="Ex">Ex</option>
+                            <option value="Ex-Mt">Ex-Mt</option>
+                            <option value="NM">NM</option>
+                            <option value="NM-Mt">NM-Mt</option>
+                            <option value="M">M</option>
+                            <option value="GemM">GemM</option>
+                        </select>
                     </div>
                     <div><span>GRADE</span>
                         <input
                             type="number"
                             name="text"
+                            step="0.5"
                             onChange={(e) => setGrade(e.target.value)}
                             value={grade}
                         ></input>
@@ -175,7 +190,7 @@ export default function NewCard() {
                                 setFrontpic(e.target.files[0]);
                             }} />
                         <div className="dropzone"></div>
-                        {frontpic ? <img alt="Front" className="cardimage" src={URL.createObjectURL(frontpic)} /> : null}
+                        {frontpic ? <img alt="Front" className="cardimage" resizeMode="contain" src={URL.createObjectURL(frontpic)} /> : null}
                         {frontpic ? null : <img alt="Front" className="signage" src={require("../images/frontimagesignage.png")} />}
                     </div>
                     <div className="dropzonecontainer">
@@ -188,7 +203,7 @@ export default function NewCard() {
                                 setBackpic(e.target.files[0])
                             }} />
                         <div className="dropzone"></div>
-                        {backpic ? <img alt="Back" className="cardimage" src={URL.createObjectURL(backpic)} /> : <img alt="Front" className="signage" src={require("../images/backimagesignage.png")} />}
+                        {backpic ? <img alt="Back" className="cardimage" resizeMode="contain" src={URL.createObjectURL(backpic)} /> : <img alt="Front" className="signage" src={require("../images/backimagesignage.png")} />}
                     </div>
                 </div>
                 <button 
@@ -205,7 +220,7 @@ export default function NewCard() {
                                     setyear: year, 
                                     majorcard: Boolean(majorCard), 
                                     quantityowned: Number(numberOwned), 
-                                    cardcondition: Number(condition),
+                                    cardcondition: condition,
                                     grade: Number(grade), 
                                     grader: grader,
                                     frontpic: await uploadImage(frontpic),

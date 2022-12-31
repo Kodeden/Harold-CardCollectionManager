@@ -29,7 +29,7 @@ export default (sequelize, DataTypes) => {
           required: true,
         },
         cardcondition: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
         },
         grade: {
           type: DataTypes.REAL,

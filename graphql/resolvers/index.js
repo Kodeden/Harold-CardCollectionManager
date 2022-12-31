@@ -1,8 +1,4 @@
-import { isConstValueNode } from "graphql";
-import { FLOAT, INTEGER, Sequelize } from "sequelize";
-import { GraphQLUpload } from "graphql-upload-minimal";
-import fs from "fs";
-import path from "path";
+import { Sequelize } from "sequelize";
 
 const resolvers = {
     Query: {

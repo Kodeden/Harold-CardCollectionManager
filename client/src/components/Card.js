@@ -282,7 +282,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
                           setNewFrontpic(results.data.changeFrontPic.frontpic);
                           
                       }}/>}
-            <div>{newFrontpic ? <img alt="Card Front" src={`http://localhost:4001/${newFrontpic}`}></img> : <div>No Front Image Found</div>}</div>
+            <div>{newFrontpic ? <img alt="Card Front" resizeMode="contain" src={`http://localhost:4001/${newFrontpic}`}></img> : <div>No Front Image Found</div>}</div>
             </div>
             <div className="piccontainer">
             {newBackpic ? <button
@@ -311,7 +311,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
                           setNewBackpic(results.data.changeBackPic.backpic);
                           
                       }}/>}
-            <div>{newBackpic ? <img alt="Card Back" src={`http://localhost:4001/${newBackpic}`}></img> : <div>No Back Image Found</div>}</div>
+            <div>{newBackpic ? <img alt="Card Back" resizeMode="contain" src={`http://localhost:4001/${newBackpic}`}></img> : <div>No Back Image Found</div>}</div>
             </div>
           </div>
         </DialogContent>
