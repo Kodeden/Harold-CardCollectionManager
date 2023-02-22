@@ -41,6 +41,11 @@ input, select {
     width: 85%;
 }
 
+.conditionselect {
+    margin: 0px;
+    padding: 5px;
+}
+
 .inputheader {
     margin: 15px;
     font-family: 'Poppins', sans-serif;

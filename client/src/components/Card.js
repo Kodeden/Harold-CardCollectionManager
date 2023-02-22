@@ -25,7 +25,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
   };
 
   const UPDATE_CARD = gql`
-  mutation Mutation($id: String, $price: Float, $majorcard: Boolean, $quantityowned: Int, $cardcondition: Int, $grade: Float, $grader: String) {
+  mutation Mutation($id: String, $price: Float, $majorcard: Boolean, $quantityowned: Int, $cardcondition: String, $grade: Float, $grader: String) {
     updateCard(id: $id, price: $price, majorcard: $majorcard, quantityowned: $quantityowned, cardcondition: $cardcondition, grade: $grade, grader: $grader) {
       id
     }
@@ -79,7 +79,7 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
           price: Number(price),
           majorcard: Boolean(majorcard), 
           quantityowned: Number(quantityowned), 
-          cardcondition: Number(cardcondition),
+          cardcondition: cardcondition,
           grade: Number(grade), 
           grader: grader},
       fetchPolicy : "network-only"})
@@ -163,12 +163,26 @@ function Card({ id, cardnumber, cardname, price, majorcard, quantityowned, cardc
         }</div>
       <div>
         {edit ? (
-          <input
-            type="number"
-            onChange={(e) => setNewCondition(e.target.value)}
-            onKeyPress={handleKeyPress}
+          <select
             value={newCondition}
-          ></input>
+            className="conditionselect"
+            onChange={(e) => {
+                setNewCondition(e.target.value)
+            }}
+          >
+            <option value=""></option>
+            <option value="P">P</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="VG">VG</option>
+            <option value="VG-Ex">VG-Ex</option>
+            <option value="Ex">Ex</option>
+            <option value="Ex-Mt">Ex-Mt</option>
+            <option value="NM">NM</option>
+            <option value="NM-Mt">NM-Mt</option>
+            <option value="M">M</option>
+            <option value="GemM">GemM</option>
+          </select>
           ) : (
           <span onDoubleClick={toggleEditMode} id={id}>
             {newCondition}
